@@ -25,6 +25,7 @@ jobs:
   test:
     name: Test with docker image ${{ matrix.docker-image }}
     runs-on: ubuntu-latest
+    needs: lint
     strategy:
       matrix:
         docker-image: ['ubuntu:xenial', 'ubuntu:bionic', 'ubuntu:focal', 'debian:bullseye']
