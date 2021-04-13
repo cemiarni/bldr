@@ -19,23 +19,12 @@ jobs:
         sudo apt install python3-venv make
     - name: Bump version
       run: "echo bldr_version=$(make bump-version) | tee --append $GITHUB_ENV"
-        #- name: Make dists
-        #  run:
-        #    make release
+    - name: Make dists
+      run:
+        make release
         #- name: Release test
         #  run:
         #    make release-test
-    - name: Temporarily disable "include administrators" branch protection
-      uses: benjefferies/branch-protection-bot@master
-      if: always()
-      with:
-        access-token: ${{ secrets.MY_TOKEN }}
-    - name: Push new version
-      uses: Andro999b/push@v1.3
-      with:
-        message: "Bump version to ${{ env.bldr_version }}"
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        force: True
           #- name: Enable "include administrators" branch protection
           #  uses: benjefferies/branch-protection-bot@master
           #  if: always()  # Force to always run this step to ensure "include administrators" is always turned back on
@@ -47,6 +36,11 @@ jobs:
           #    user: __token__
           #    password: ${{ secrets.PYPI_API_TOKEN }}
           #    verbose: true
+    - name: Merge PR
+      env:
+        GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        .release-test-venv/bin/python3 .github/workflows/create_version_pr.py
     - name: Tag
       env:
         GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
