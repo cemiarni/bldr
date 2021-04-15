@@ -34,5 +34,5 @@ jobs:
     - name: Tag
       uses: negz/create-tag@v1
       with:
-        version: ${{ env.bldr_version }}
+        version: "v${{ env.bldr_version }}"
         token: ${{ secrets.GITHUB_TOKEN }}
