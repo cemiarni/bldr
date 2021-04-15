@@ -17,22 +17,22 @@ jobs:
       run: |
         python -m pip install -U pip wheel twine
         sudo apt install python3-venv make
-    - name: Make dists
-      run:
-        make release
-    - name: Release test
-      run:
-        make release-test
-    - name: Publish a Python distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
-        verbose: true
+        #- name: Make dists
+        #  run:
+        #    make release
+        #- name: Release test
+        #  run:
+        #    make release-test
+        #- name: Publish a Python distribution to PyPI
+        #  uses: pypa/gh-action-pypi-publish@release/v1
+        #  with:
+        #    user: __token__
+        #    password: ${{ secrets.PYPI_API_TOKEN }}
+        #    verbose: true
     - name: Read version
       run: "echo bldr_version=$(cat bldr/VERSION) | tee --append $GITHUB_ENV"
     - name: Tag
-      env:
-        GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        .release-test-venv/bin/python3 .github/workflows/tag.py ${{ env.bldr_version }}
+      uses: negz/create-tag@v1
+      with:
+        version: ${{ env.bldr_version }}
+        token: ${{ secrets.GITHUB_TOKEN }}
